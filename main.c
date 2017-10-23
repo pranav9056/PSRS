@@ -2,8 +2,14 @@
 #include "mpi.h"
 #include "merge.h"
 #include "Queue.h"
+#include "heap.h"
+
 typedef struct node* node;
 typedef struct queue* queue;
+
+typedef struct minHeapNode* minHeapNode;
+typedef struct minHeap* minHeap;
+
 
 int main ( int argc , char **argv )
 {
