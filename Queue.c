@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include<stdlib.h>
 #include "Queue.h"
-typedef struct node* node;
-typedef struct queue* queue;
 
 queue createQueue(){
 	queue temp = malloc(sizeof(struct queue));
@@ -58,6 +56,13 @@ void pop(queue q){
 			q->rear=NULL;
 		free(temp);
 	}
+}
+
+int isEmpty(queue q){
+	if(q->front == NULL && q->rear==NULL){
+		return 0;
+	}
+	return 1;
 }
 /*
 int main(){
