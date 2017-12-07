@@ -38,7 +38,7 @@ void merge(int arr[] , int l, int m ,int r){
 
 void mergeSort(int arr[],int l,int r){
 	if(l<r){
-		int m = (l+r)/2;
+		int m = l+(r-l)/2;;
 		mergeSort(arr,l,m);
 		mergeSort(arr,m+1,r);
 		merge(arr,l,m,r);
@@ -56,3 +56,19 @@ void printArray(int A[],int arr_size)
 void sort(int arr[],int arr_size){
     mergeSort(arr, 0, arr_size - 1);
 }
+
+
+
+
+// int main( int argc , char **argv ){
+	// int noPerProcessor = atoi(argv[1]);
+	// int *arr= malloc(sizeof(int)*noPerProcessor);
+	// srand(noPerProcessor+2);
+	// int i;
+	
+	// for (i=0;i<noPerProcessor;i++){
+		// arr[i] = rand()%5000;
+	// }
+	// sort(arr,noPerProcessor);
+	
+// }

@@ -31,6 +31,10 @@ int binarySearch(int arr[], int l, int r, int x)
 	return l;
 }
 
+int cmpfunc (const void * a, const void * b) {
+   return ( *(int*)a - *(int*)b );
+}
+
 int main ( int argc , char **argv )
 {
 	struct timeval start,end;
@@ -43,18 +47,18 @@ int main ( int argc , char **argv )
 	dest=size-1;
 	//int k=atoi(argv[1]); //Total Number of Elements to be sorted
 	//int noPerProcessor = k/(size-1);
-	int noPerProcessor = atoi(argv[1]);
-	int k = noPerProcessor*(size);
+	long noPerProcessor = atoi(argv[1]);
+	long k = noPerProcessor*(size);
 	
 	//removed if
 	int *arr= malloc(sizeof(int)*noPerProcessor);
-	srand(rank+2);
+	srand(rank*7+10);
 	for (i=0;i<noPerProcessor;i++){
-		arr[i] = rand()%5000;
+		arr[i] = rand()%50000;
 	}
 	gettimeofday(&start,NULL);
-
-	sort(arr,noPerProcessor);
+	qsort(arr, noPerProcessor, sizeof(int), cmpfunc);
+	//sort(arr,noPerProcessor);
 	//printf("Sorted array is \n");
 	//printArray(arr,noPerProcessor);
 	// Send initial values
@@ -68,7 +72,7 @@ int main ( int argc , char **argv )
 			if(i==0)
 				temp[i] = arr[i];
 			else
-				temp[i] = arr[((i*k)/(size*size))];
+				temp[i] = arr[((i)*(k/(size*size)))];
 		}
 		
 		ierr = MPI_Send( temp , size ,MPI_REAL, dest , rank ,MPI_COMM_WORLD);
@@ -98,7 +102,7 @@ int main ( int argc , char **argv )
 			if (i==0)
 				push(q[size-1],arr[0]);
 			else
-				push(q[size-1],arr[((i*k)/(size*size))]);
+				push(q[size-1],arr[((i)*(k/(size*size)))]);
 		}
 		fromQueueToHeap(q,size-1,mHeap);
 		int pivotval[size*size];
@@ -166,7 +170,7 @@ int main ( int argc , char **argv )
 		}
 		else{
 			*temp2= ind-prevind+1;
-			printf("%d:%d:%d\n",ind,prevind,rank);
+			//printf("%d:%d:%d\n",ind,prevind,rank);
 			ierr = MPI_Send( temp2,1 ,MPI_REAL, i , rank ,MPI_COMM_WORLD);
 			ierr = MPI_Send( &arr[prevind] , ind-prevind+1 ,MPI_REAL, i , rank ,MPI_COMM_WORLD);
 
@@ -192,7 +196,7 @@ int main ( int argc , char **argv )
 		if(arr[i]>arr[i+1])
 			printf("Not sorted at index:%d, proc:%d",i,rank);
 	}
-	printf("Total no at proc-%d : %d\n",rank,total);
+	//printf("Total no at proc-%d : %d\n",rank,total);
 	/* if(rank==0){
 		ierr = MPI_Send( &arr[total-1],1 ,MPI_REAL, rank+1 , rank ,MPI_COMM_WORLD);
 	}
@@ -209,7 +213,7 @@ int main ( int argc , char **argv )
 			printf("Not sorted between proc:%d, proc:%d",rank-1,rank);
 		}
 	} */
-	printf("%d-: %d:%d\n",rank,arr[0],arr[total-1]);
+	printf("%d-: size = %d, start = %d, end = %d\n",rank,total,arr[0],arr[total-1]);
 	ierr= MPI_Finalize();
 	//printf("dine");
 
